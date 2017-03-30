@@ -19,9 +19,9 @@ angular.module('myApp', [])
 .controller('bitrateCalculator', ['$scope', function($scope){ 
  
     $scope.items = [];
-    $scope.formats = [{name:"YUV 4:4:4", factor:3, depthMeaning:"Luminance channel Y depth"}, 
-                      {name:"YUV 4:2:2", factor:2, depthMeaning:"Luminance channel Y depth"},
-                      {name:"RGB"      , factor:3, depthMeaning:"One channel color depth"}];
+    $scope.formats = [{name:"YUV 4:4:4", totalBppFactor:3, depthMeaning:"Luminance channel Y depth"}, 
+                      {name:"YUV 4:2:2", totalBppFactor:2, depthMeaning:"Luminance channel Y depth"},
+                      {name:"RGB"      , totalBppFactor:3, depthMeaning:"One channel color depth"}];
     
     $scope.format = $scope.formats[1];
     $scope.frameFormat = $scope.format.name; 
@@ -31,56 +31,59 @@ angular.module('myApp', [])
     $scope.width = 1920;
     $scope.height = 1080;
     $scope.depth = 10;
-    $scope.lcbit = 3;
+    $scope.totalBpp = 3;
     $scope.framerate = 60;
     $scope.count = 0;
     
-    
     $scope.calculate = function(){
-        $scope.lcbit = $scope.depth * $scope.format.factor; 
-        $scope.frameSizeInBits = $scope.lcbit * $scope.width * $scope.height; 
+        $scope.totalBpp = $scope.depth * $scope.format.totalBppFactor; 
+        $scope.frameSizeInBits = $scope.totalBpp * $scope.width * $scope.height; 
     };
     
     $scope.frameFormatChanged = function(selectedItem){
         $scope.format = $scope.formats.find(x => x.name === selectedItem);
-        $scope.depthLabel =  $scope.format.depthMeaning;
+        $scope.depthLabel = $scope.format.depthMeaning;
         $scope.calculate();
     };
     
+    $scope.getTotalBitrateGByte = function(){
+        var total = 0;
+        for(var i = 0; i < $scope.items.length; i++){
+            total += $scope.items[i].bitrate;
+        }
+        return total;
+     }
+     
+    $scope.bitrateGbit = function(){
+        return $scope.frameSizeInBits * $scope.framerate / 1000000000;
+    };
+     
     $scope.add = function(){
         var item  = {id: Date.now(),
-                     width:  $scope.width,
-                     height: $scope.height,
-                     depth:  $scope.depth,
-                     lcbit:  $scope.lcbit,
-                     factor: $scope.factor,
+                     width:       $scope.width,
+                     height:      $scope.height,
+                     depth:       $scope.depth,
+                     totalBpp:    $scope.totalBpp,
                      framerate:   $scope.framerate,
                      frameFormat: $scope.format.name,
+                     totalBppFactor:  $scope.totalBppFactor,
                      frameSizeInBits: $scope.frameSizeInBits,
-                     bitrate: $scope.frameSizeInBits / 8.0 * $scope.framerate /1000000000};
+                     bitrate: bitrateGbit() / 8 };
     
         $scope.items.push(item);   
     };
-    
-    $scope.getTotal = function(){
-            var total = 0;
-            for(var i = 0; i < $scope.items.length; i++){
-                total += $scope.items[i].bitrate;
-            }
-            return total;
-     }
      
     $scope.remove = function(id){
-            var itemToRemove = $scope.items.find(x => x.id === id);   
-            if (itemToRemove != null){
-                var index = $scope.items.indexOf(itemToRemove);
-                $scope.items.splice(index, 1);
-            }
+        var itemToRemove = $scope.items.find(x => x.id === id);   
+        if (itemToRemove != null){
+            var index = $scope.items.indexOf(itemToRemove);
+            $scope.items.splice(index, 1);
+        }
      }
      
     $scope.removeAll = function(item){
-              $scope.items = [];
-     }
+        $scope.items = [];
+    }
      
     $scope.calculate();
 }]);
