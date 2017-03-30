@@ -17,97 +17,96 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.*/
 
 <!DOCTYPE html>
 <html>
+
+<head>
+<meta charset="ISO-8859-1">
+<title>Video bitrate calculator</title>
 <link data-require="bootstrap@*" data-semver="3.3.2" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 <script data-require="bootstrap@*" data-semver="3.3.2" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <meta name="viewport" content="width=device-width, user-scalable=no">
-<body ng-app="myApp" style="max-width: 900px; margin-left: auto; margin-right: auto;" class="ng-scope">
+<script src="js/controls.js"></script>
+</head>
+
+<body data-ng-app="myApp" style="max-width: 900px; margin-left: auto; margin-right: auto;" class="ng-scope">
 
 
-<div ng-controller="myCtrl">  
+
+<div data-ng-controller="bitrateCalculator">  
     
-    <h1>Video bitrate calculator</h1>
-    <div class="panel panel-default">
-    <div class="panel-body">
+<h1>Video bitrate calculator</h1>
+<div class="panel panel-default">
+<div class="panel-body">
         
     <div class="form-group">
       <label for="width">Width:</label>
-      <input type="number" class="form-control" id="width" ng-change="calculate()"  ng-model="width">
+      <input type="number" class="form-control" id="width" data-ng-change="calculate()"  data-ng-model="width">
     </div>
     
     <div class="form-group">
       <label for="height">Height:</label>
-      <input type="number" class="form-control" id="height" ng-change="calculate()"  ng-model="height">
+      <input type="number" class="form-control" id="height" data-ng-change="calculate()"  data-ng-model="height">
     </div>
     
     <div class="form-group">
       <label for="frameFormat">Frame format:</label>
-      <select ng-model="frameFormat" 
-          ng-options="x.name as x.name for x in formats"
-          ng-change="frameFormatChanged(frameFormat)"
+      <select data-ng-model="frameFormat" 
+          data-ng-options="x.name as x.name for x in formats"
+          data-ng-change="frameFormatChanged(frameFormat)"
           id="frameFormat"
           class="form-control">
    	  </select>
     </div>
-    
         
     <div class="form-group">
       <label for="depth">Depth (bits/pixel):</label>
-      <input type="number" class="form-control" id="depth" ng-change="calculate()"  ng-model="depth">
+      <input type="number" class="form-control" id="depth" data-ng-change="calculate()"  data-ng-model="depth">
        <span class="help-block">{{depthLabel}}</span>
     </div>
      
     <div class="form-group">
       <label for="framerate">Frame rate (fps):</label>
-      <input type="number" class="form-control" id="framerate" ng-change="calculate()"  ng-model="framerate">
+      <input type="number" class="form-control" id="framerate" data-ng-change="calculate()"  data-ng-model="framerate">
     </div>
      
- 
-      
     
     <h2> Calculation </h2>
     <ul>
-    <li>Size: <code>{{width}}</code>x<code>{{height}}</code> = <code>{{width*height}}</code> pixels</li>
-    <li>Bits per pixel (all channels): <code>{{lcbit}}</code> bits/pixel</li>
-    <li>Frame size: <code>{{frameSizeInBits}}</code> bits = <code>{{frameSizeInBits/8}}</code> bytes</li>
-    
-      <li>Bit rate: <code>{{frameSizeInBits * framerate /1000000000}}</code> Gbit/s (gigabit per second) = <code>{{frameSizeInBits / 8.0 * framerate /1000000000}}</code> GB/s (gigabyte per second)</li>
+		<li>Size: <code>{{width}}</code>x<code>{{height}}</code> = <code>{{width*height}}</code> pixels</li>
+		<li>Bits per pixel (all channels): <code>{{lcbit}}</code> bits/pixel</li>
+		<li>Frame size: <code>{{frameSizeInBits}}</code> bits = <code>{{frameSizeInBits/8}}</code> bytes</li>
+		<li>Bit rate: <code>{{frameSizeInBits * framerate /1000000000}}</code> Gbit/s (gigabit per second) = <code>{{frameSizeInBits / 8.0 * framerate /1000000000}}</code> GB/s (gigabyte per second)</li>
     </ul>
        
     <div class="form-group">      
     <button type="button" class="btn btn-primary btn-block" 
-                            ng-click="add()">Add video configuration to table</button>
+                            data-ng-click="add()">Add video configuration to table</button>
     </div>   
        
+ </div>
+ </div>
     
-	</div>
-    </div>
-    
-    <div class="panel panel-default">
-    <div class="panel-body">
-    
-
-  
-    
+ <div class="panel panel-default">
+ <div class="panel-body">
+     
     <h2>Saved configurations</h2>
     
     <table class="table table-striped">
     <tr>
-    <th>#</th>
-    <th>video channels</th>
-    <th>bitrate</th>
-    <th><button type="button" class="btn btn-sm" 
-                            ng-click="removeAll()">Clear Table</button></th>
+		<th>#</th>
+		<th>video channels</th>
+		<th>bitrate</th>
+		<th><button type="button" class="btn btn-sm" 
+                            data-ng-click="removeAll()">Clear Table</button></th>
     </tr>
     
-   
-       
-    <tr ng-repeat="x in items">
+	
+    <tr data-ng-repeat="x in items">
     	<td>{{$index+1}}</td>
     	<td>{{ x.width }}x{{ x.height }}, @{{ x.framerate }} fps, {{x.depth}} bits, {{x.frameFormat}} ({{x.lcbit}} bits/pixel)</td>
     	<td>{{ x.bitrate | number:4 }} GB/s</td>
     	<td><button type="button" class="btn  btn-sm" 
-                            ng-click="remove(x.id)">Remove</button></td>
+                            data-ng-click="remove(x.id)">Remove</button></td>
  	</tr> 
     
     <tr class="table-warning">
@@ -115,99 +114,16 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.*/
         <td><strong>TOTAL BITRATE</strong></td>
 		<td><strong>{{ getTotal()  | number:4 }} GB/s </strong></td>
    		<td><button type="button" class="btn  btn-sm" 
-                            ng-click="removeAll()" disabled>Export Data</button></td>
+                            data-ng-click="removeAll()" disabled>Export Data</button></td>
     </tr>
-    
-    
-    
-    
     </table>
-	</div></div>
-    
-    <p>gigabyte per second (GB/s)
-    gigabit per second Gbit/s</p>
-   	
+	
+	<p>gigabyte per second (GB/s); gigabit per second Gbit/s</p>
+	
+</div>
+</div>
     
 </div>
-
-<script>
-angular.module('myApp', [])
-.controller('myCtrl', ['$scope', function($scope) { 
-
-    
-    $scope.items = [];
-	$scope.formats = [{name:"YUV 4:4:4", factor:3, depthMeaning:"Luminance channel Y depth"}, 
-                      {name:"YUV 4:2:2", factor:2, depthMeaning:"Luminance channel Y depth"},
-                      {name:"RGB"      , factor:3, depthMeaning:"One channel color depth"}];
-    
-    $scope.format=$scope.formats[1];
-	$scope.frameFormat = $scope.format.name; 
-    $scope.depthLabel =  $scope.format.depthMeaning;
-    
-    
-    $scope.frameSizeInBits=0;
-    $scope.width=1920;
-    $scope.height=1080;
-    $scope.depth=10;
-    $scope.lcbit=3;
-    $scope.framerate=60;
-    $scope.count = 0;
-    
-    
-    $scope.calculate = function() {
-    	$scope.lcbit=$scope.depth*$scope.format.factor; 
-        $scope.frameSizeInBits=$scope.lcbit*$scope.width*$scope.height; 
-    };
-    
-     $scope.frameFormatChanged = function(selectedItem) {
-       
-        $scope.format = $scope.formats.find(x => x.name === selectedItem);    
-        $scope.depthLabel =  $scope.format.depthMeaning;            
-     	$scope.calculate();
-    };
-    
-    
-    $scope.add = function() {
-    	var item  = {id: Date.now(),
-        			 width: $scope.width,
-                     height: $scope.height,
-                     frameSizeInBits: $scope.frameSizeInBits,
-                     framerate: $scope.framerate,
-                     depth: $scope.depth,
-                     lcbit: $scope.lcbit,
-                     frameFormat: $scope.format.name,
-                     factor: $scope.factor,
-                     bitrate: $scope.frameSizeInBits / 8.0 * $scope.framerate /1000000000};
-    
-        $scope.items.push(item);   
-    };
-    
-     $scope.getTotal = function(){
-            var total = 0;
-            for(var i = 0; i < $scope.items.length; i++) {
-                total += $scope.items[i].bitrate;
-            }
-            return total;
-     }
-     
-     $scope.remove = function(id){            
-            var itemToRemove = $scope.items.find(x => x.id === id); 
-            
-            if (itemToRemove != null) {
-	            var index = $scope.items.indexOf(itemToRemove);    
-  				$scope.items.splice(index, 1);     
-            }
-     }
-     
-     $scope.removeAll = function(item){            
-  			$scope.items=[];     
-     }
-     
-    
-    $scope.calculate();
-}]);
-</script>
-
 
 </body>
 </html>
