@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.If not, see <http://www.gnu.org/licenses/>.*/
 
 
-angular.module('myApp', [])
+angular.module('bitrateCalculatorApp', [])
 .controller('bitrateCalculator', ['$scope', function($scope){ 
  
     $scope.items = [];
@@ -84,6 +84,15 @@ angular.module('myApp', [])
     $scope.removeAll = function(item){
         $scope.items = [];
     }
+  
+    $scope.getTotal = function(){
+        var total = 0;
+        for(var i = 0; i < $scope.items.length; i++) {
+            total += $scope.items[i].bitrate;
+        }
+        return total;
+    };
+     
      
     $scope.calculate();
 }]);
