@@ -66,9 +66,9 @@ angular.module('bitrateCalculatorApp', [])
                      totalBpp:    $scope.totalBpp,
                      framerate:   $scope.framerate,
                      frameFormat: $scope.format.name,
-                     totalBppFactor:  $scope.totalBppFactor,
+                     totalBppFactor:  $scope.format.totalBppFactor,
                      frameSizeInBits: $scope.frameSizeInBits,
-                     bitrate: bitrateGbit() / 8 };
+                     bitrate:  $scope.bitrateGbit() / 8 };
     
         $scope.items.push(item);   
     };
